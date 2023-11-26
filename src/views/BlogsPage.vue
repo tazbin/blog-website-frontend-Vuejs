@@ -1,33 +1,35 @@
 <template>
-  <div>
-    <h1>Blogs page</h1>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo id tempore, et nesciunt dolorum
-    corrupti. Sapiente debitis fugiat impedit neque at? Sequi, corporis! Aut odit laboriosam
-    exercitationem necessitatibus dolor reprehenderit.
-    <hr />
-
-    <el-row class="mb-4">
-    <el-button>Default</el-button>
-    <el-button type="primary">Primary</el-button>
-    <el-button type="success">Success</el-button>
-    <el-button type="info">Info</el-button>
-    <el-button type="warning">Warning</el-button>
-    <el-button type="danger">Danger</el-button>
-  </el-row>
-
-  <div class="flex">
-    <el-button type="primary" :icon="Edit" />
-    <el-button type="primary" :icon="Share" />
-    <el-button type="primary" :icon="Delete" />
-    <el-button type="primary" :icon="Search">Search</el-button>
-    <el-button type="primary">
-      Upload<el-icon class="el-icon--right"><Upload /></el-icon>
-    </el-button>
+  <div class="flex container mx-auto mt-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-2/3">
+    <el-card v-for="blog in blogs" :key="blog" :body-style="{ padding: '0px' }">
+        <img
+          src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+          class="w-full h-48 object-cover"
+        />
+        <div style="padding: 14px">
+            <router-link :to="{ name: 'blog-details', params: { id: 1 } }" class="text-lg cursor-pointer font-semibold">
+              Yummy hamburger
+            </router-link>
+          <div class="mt-2">
+            <p>
+              Tazbinur bhai
+            </p>
+            <p>
+              Food categiory
+            </p>
+          </div>
+        </div>
+      </el-card>
   </div>
-
+  <div class="w-1/3">
+    <BlogCategories/>
+  </div>
   </div>
 </template>
 
 <script setup>
-import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
+import { ref } from 'vue'
+import BlogCategories from '../components/BlogCategories.vue';
+
+const blogs = ref([1, 2, 3, 4, 5, 6])
 </script>
