@@ -29,8 +29,9 @@ const router = createRouter({
       component: SigninPage
     },
     {
-      path: '/profile',
-      name: 'profile',
+      path: '/profile/:id',
+      name: 'profile-page',
+      propes: true,
       component: ProfilePage
     },
   ]

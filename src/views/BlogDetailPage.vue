@@ -55,7 +55,7 @@
           class="h-24 object-cover rounded"
         />
       </div>
-      <div class="w-11/12">
+      <div class="w-11/12 pl-8">
         <p class="font-bold">Tazbinr bhai</p>
         <p class="text-xs italic mb-2 mt-1">14th Feb, 3023</p>
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam vitae ut possimus incidunt
@@ -65,6 +65,14 @@
     </div>
     </div>
     <div class="w-1/3 pl-12">
+    <div class="bg-gray-50 p-4 rounded text-center mb-4 shadow-md">
+      <p class="text-xl">
+        Tazbinur Bhai
+      </p>
+      <router-link class="bg-gray-200 block p-2 rounded mt-4" :to="{ name: 'profile-page', params: { id: 34 } }">
+        View profile
+      </router-link>
+    </div>
         <blog-categories/>
     </div>
   </div>
