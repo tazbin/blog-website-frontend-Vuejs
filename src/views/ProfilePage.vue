@@ -40,13 +40,13 @@
         :total="50"
         class="mt-4 col-span-4"
       />
-    <div class="col-span-3 grid grid-cols-3 gap-4">
-      <blog-card :blogs="blogs" class="col-span-1" />
+      <div class="col-span-3 grid grid-cols-3 gap-4">
+        <blog-card :blogs="blogs" class="col-span-1" />
+      </div>
+      <div class="col-span-1">
+        <BlogCategories />
+      </div>
     </div>
-    <div class="col-span-1">
-      <BlogCategories />
-    </div>
-  </div>
   </div>
 </template>
 

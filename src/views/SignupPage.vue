@@ -25,20 +25,45 @@
           label-width="100px"
           class="demo-ruleForm w-full"
         >
-        <el-form-item prop="firstName">
-            <el-input v-model="ruleForm.firstName" placeholder="Enter first name" type="text" autocomplete="off" />
+          <el-form-item prop="firstName">
+            <el-input
+              v-model="ruleForm.firstName"
+              placeholder="Enter first name"
+              type="text"
+              autocomplete="off"
+            />
           </el-form-item>
           <el-form-item prop="lastName">
-            <el-input v-model="ruleForm.lastName" placeholder="Enter last name" type="text" autocomplete="off" />
+            <el-input
+              v-model="ruleForm.lastName"
+              placeholder="Enter last name"
+              type="text"
+              autocomplete="off"
+            />
           </el-form-item>
-        <el-form-item prop="email">
-            <el-input v-model="ruleForm.email" placeholder="Enter email" type="text" autocomplete="off" />
+          <el-form-item prop="email">
+            <el-input
+              v-model="ruleForm.email"
+              placeholder="Enter email"
+              type="text"
+              autocomplete="off"
+            />
           </el-form-item>
           <el-form-item prop="pass">
-            <el-input v-model="ruleForm.pass" type="password" placeholder="Enter password" autocomplete="off" />
+            <el-input
+              v-model="ruleForm.pass"
+              type="password"
+              placeholder="Enter password"
+              autocomplete="off"
+            />
           </el-form-item>
           <el-form-item prop="confirmPass">
-            <el-input v-model="ruleForm.confirmPass" type="password" placeholder="Confirm password" autocomplete="off" />
+            <el-input
+              v-model="ruleForm.confirmPass"
+              type="password"
+              placeholder="Confirm password"
+              autocomplete="off"
+            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm(ruleFormRef)">Submit</el-button>
@@ -57,24 +82,24 @@ import { reactive, ref } from 'vue'
 const ruleFormRef = ref()
 
 const validateFirstName = (rules, value, callback) => {
-  if( value === '' ) {
+  if (value === '') {
     callback(new Error('Please enter first name'))
   }
   callback()
 }
 
 const validateLastName = (rules, value, callback) => {
-  if( value === '' ) {
+  if (value === '') {
     callback(new Error('Please enter last name'))
   }
   callback()
 }
 
 const validateEmail = (rules, value, callback) => {
-  if( value === '' ) {
+  if (value === '') {
     callback(new Error('Please enter en email'))
   } else {
-    if( !value.includes('@') ) {
+    if (!value.includes('@')) {
       callback(new Error('Please enter valid email address'))
     }
   }
@@ -108,7 +133,7 @@ const ruleForm = reactive({
   lastName: '',
   email: '',
   pass: '',
-  confirmPass: '',
+  confirmPass: ''
 })
 
 const rules = reactive({
@@ -116,7 +141,7 @@ const rules = reactive({
   lastName: [{ validator: validateLastName, trigger: 'blur' }],
   email: [{ validator: validateEmail, trigger: 'blur' }],
   pass: [{ validator: validatePass, trigger: 'blur' }],
-  confirmPass: [{ validator: validateConfirmPass, trigger: 'blur' }],
+  confirmPass: [{ validator: validateConfirmPass, trigger: 'blur' }]
 })
 
 const submitForm = (formEl) => {

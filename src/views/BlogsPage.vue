@@ -1,12 +1,12 @@
 <template>
   <div class="grid grid-cols-4 gap-8 container mx-auto mt-4">
     <el-pagination
-        small
-        background
-        layout="prev, pager, next"
-        :total="50"
-        class="mt-4 col-span-4"
-      />
+      small
+      background
+      layout="prev, pager, next"
+      :total="50"
+      class="mt-4 col-span-4"
+    />
     <div class="col-span-3 grid grid-cols-3 gap-4">
       <blog-card :blogs="blogs" class="col-span-1" />
     </div>
