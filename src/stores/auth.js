@@ -3,20 +3,6 @@ import { ref } from 'vue'
 import makeApiRequest from '../services/http'
 
 export const useAuthStore = defineStore('auth', () => {
-  const isAuthenticated = ref(false)
-  const user = ref({})
-  const loginLoading = ref(false)
-  const loginError = ref({})
-  const loginSuccess = ref(false)
-
-  const resetState = () => {
-    isAuthenticated.value = false
-    user.value = {}
-    loginLoading.value = false
-    loginError.value = {}
-    loginSuccess.value = false
-  }
-
   const getAccessToken = () => {
     return localStorage.getItem('access-token')
   }
@@ -31,6 +17,21 @@ export const useAuthStore = defineStore('auth', () => {
 
   const clearLocalStorage = () => {
     localStorage.clear()
+  }
+
+  const isAuthenticated = ref(false)
+  const user = ref({})
+
+  const loginLoading = ref(false)
+  const loginError = ref({})
+  const loginSuccess = ref(false)
+
+  const resetLoginState = () => {
+    isAuthenticated.value = false
+    user.value = {}
+    loginLoading.value = false
+    loginError.value = {}
+    loginSuccess.value = false
   }
 
   const login = (loginData) => {
@@ -79,26 +80,71 @@ export const useAuthStore = defineStore('auth', () => {
         })
         .catch(() => {
           clearLocalStorage()
-          resetState()
+          resetLoginState()
         })
     }
   }
 
+  const registerLoading = ref(false)
+  const registerError = ref({})
+  const registerSuccess = ref(false)
+
+  const register = (registerData) => {
+    registerError.value = {}
+    registerSuccess.value = false
+    registerLoading.value = true
+
+    makeApiRequest({
+      url: 'http://localhost:3000/user/register',
+      method: 'post',
+      payload: {
+        email: registerData.email,
+        first_name: registerData.firstName,
+        last_name: registerData.lastName,
+        password: registerData.pass
+      }
+    })
+      .then((res) => {
+        user.value = res.data.user
+        isAuthenticated.value = true
+
+        setAccessToken(res.data.accessToken)
+        setRefreshToken(res.data.refreshToken)
+
+        registerSuccess.value = true
+        registerLoading.value = false
+      })
+      .catch((err) => {
+        isAuthenticated.value = false
+        user.value = {}
+        clearLocalStorage()
+
+        registerError.value = err.response.data.error
+        registerSuccess.value = false
+        registerLoading.value = false
+      })
+  }
+
   const logout = () => {
     clearLocalStorage()
-    resetState()
+    resetLoginState()
   }
 
   return {
     isAuthenticated,
     user,
+
     login,
     loginLoading,
     loginError,
     loginSuccess,
 
     logout,
+    getLoggedInUserData,
 
-    getLoggedInUserData
+    register,
+    registerError,
+    registerSuccess,
+    registerLoading
   }
 })

@@ -16,7 +16,6 @@ const authGuard = (to, from, next) => {
 
 const noAuthGuard = (to, from, next) => {
   const authStore = useAuthStore()
-  console.log('authStore.isAuthenticated', authStore.isAuthenticated)
   if (!authStore.isAuthenticated) {
     next()
   } else {

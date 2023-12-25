@@ -56,8 +56,8 @@ const router = useRouter()
 watchEffect(() => {
   if (authStore.loginSuccess) {
     ElNotification({
-      title: 'Signup Success',
-      message: 'Signup Success',
+      title: 'Signin Success',
+      message: 'Signin Success',
       type: 'success',
       offset: 100
     })
@@ -67,7 +67,7 @@ watchEffect(() => {
 
   if (Object.keys(authStore.loginError).length) {
     ElNotification({
-      title: 'Signup Error',
+      title: 'Signin Error',
       message: authStore.loginError.message,
       type: 'error',
       offset: 100

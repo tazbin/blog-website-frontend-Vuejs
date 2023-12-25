@@ -66,7 +66,13 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm(ruleFormRef)">Submit</el-button>
+            <el-button
+              type="primary"
+              :disabled="authStore.registerLoading"
+              @click="submitForm(ruleFormRef)"
+            >
+              {{ authStore.registerLoading ? 'Submitting...' : 'Submit' }}
+            </el-button>
             <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
           </el-form-item>
         </el-form>
@@ -77,8 +83,13 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watchEffect } from 'vue'
+import { useAuthStore } from '../stores/auth'
+import { ElNotification } from 'element-plus'
+import { useRouter } from 'vue-router'
 
+const authStore = useAuthStore()
+const router = useRouter()
 const ruleFormRef = ref()
 
 const validateFirstName = (rules, value, callback) => {
@@ -148,14 +159,35 @@ const submitForm = (formEl) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
-      console.log('submit!')
-      console.log(ruleForm)
+      authStore.register(ruleForm)
     } else {
       console.log('error submit!')
       return false
     }
   })
 }
+
+watchEffect(() => {
+  if (authStore.registerSuccess) {
+    ElNotification({
+      title: 'Signup Success',
+      message: 'Signup Success',
+      type: 'success',
+      offset: 100
+    })
+
+    router.push({ name: 'profile-page', params: { id: authStore.user._id } })
+  }
+
+  if (Object.keys(authStore.registerError).length) {
+    ElNotification({
+      title: 'Signup Error',
+      message: authStore.registerError.message,
+      type: 'error',
+      offset: 100
+    })
+  }
+})
 
 const resetForm = (formEl) => {
   if (!formEl) return
