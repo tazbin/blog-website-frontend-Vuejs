@@ -15,6 +15,11 @@
       <el-menu-item index="3">
         <router-link to="/">Blogs</router-link>
       </el-menu-item>
+      <el-menu-item index="4" v-if="authStore.isAuthenticated">
+        <router-link :to="{ name: 'profile-page', params: { id: authStore.user._id } }"
+          >Profile</router-link
+        >
+      </el-menu-item>
       <el-button
         class="mt-3"
         v-if="authStore.isAuthenticated"

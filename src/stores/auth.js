@@ -68,20 +68,31 @@ export const useAuthStore = defineStore('auth', () => {
       })
   }
 
-  const getLoggedInUserData = async () => {
+  const loggedInUserFetchError = ref({})
+  const loggedInUserFetchSuccess = ref(false)
+
+  const getLoggedInUserData = () => {
     if (getAccessToken) {
-      return makeApiRequest({
-        url: 'http://localhost:3000/user/me',
-        method: 'get'
-      })
-        .then((res) => {
-          user.value = res.data
-          isAuthenticated.value = true
+      loggedInUserFetchError.value = {}
+      loggedInUserFetchSuccess.value = false
+
+      setTimeout(() => {
+        makeApiRequest({
+          url: 'http://localhost:3000/user/me',
+          method: 'get'
         })
-        .catch(() => {
-          clearLocalStorage()
-          resetLoginState()
-        })
+          .then((res) => {
+            loggedInUserFetchSuccess.value = true
+            user.value = res.data
+            isAuthenticated.value = true
+          })
+          .catch((err) => {
+            loggedInUserFetchError.value = err.response.data.error
+            clearLocalStorage()
+            resetLoginState()
+          })
+      }, 4000);
+
     }
   }
 
@@ -140,6 +151,9 @@ export const useAuthStore = defineStore('auth', () => {
     loginSuccess,
 
     logout,
+
+    loggedInUserFetchError,
+    loggedInUserFetchSuccess,
     getLoggedInUserData,
 
     register,

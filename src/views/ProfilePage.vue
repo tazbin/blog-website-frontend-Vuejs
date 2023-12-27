@@ -1,34 +1,29 @@
 <template>
   <div class="container mx-auto my-8">
-    <div class="grid grid-cols-10 gap-2">
+    <el-skeleton v-if="!authStore.loggedInUserFetchSuccess" :rows="5" animated />
+    <div v-else class="grid grid-cols-10 gap-2">
       <div class="col-span-2">
-        <img
-          src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-          class="h-48 object-cover rounded"
-        />
+        <img :src="authStore.user.img" class="h-48 object-cover rounded" />
       </div>
 
       <div class="col-span-2">
-        <span class="font-bold mb-2 inline-block"> First name: </span> Tazbinur Bhai
+        <span class="font-bold mb-2 inline-block"> First name: </span>
+        {{ authStore.user.first_name }}
         <br />
-        <span class="font-bold mb-2 inline-block"> First name: </span> Tazbinur Bhai
+        <span class="font-bold mb-2 inline-block"> Last name: </span> {{ authStore.user.last_name }}
         <br />
-        <span class="font-bold mb-2 inline-block"> First name: </span> Tazbinur Bhai
+        <span class="font-bold mb-2 inline-block"> Email: </span> {{ authStore.user.email }}
         <br />
-        <span class="font-bold mb-2 inline-block"> First name: </span> Tazbinur Bhai
+        <span class="font-bold mb-2 inline-block"> Job: </span> {{ authStore.user.job }}
         <br />
-        <span class="font-bold mb-2 inline-block"> First name: </span> Tazbinur Bhai
+        <span class="font-bold mb-2 inline-block"> Joined: </span> {{ authStore.user.joined }}
         <br />
-        <span class="font-bold mb-2 inline-block"> First name: </span> Tazbinur Bhai
+        <span class="font-bold mb-2 inline-block"> Address: </span> {{ authStore.user.address }}
         <br />
       </div>
 
       <div class="col-span-6">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates laborum, qui eum modi
-        hic corporis architecto debitis earum. Dolorum pariatur accusantium possimus velit dolores
-        magni ipsum animi blanditiis. Rerum, itaque. Lorem ipsum dolor sit amet consectetur
-        adipisicing elit. Omnis unde delectus, molestias debitis culpa, et consequatur tempora
-        cumque, repellat aut rerum minima eum! Earum accusamus, omnis ad aut illum et?
+        {{ authStore.user.about }}
       </div>
     </div>
 
@@ -51,9 +46,40 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import BlogCard from '../components/BlogCard.vue'
 import BlogCategories from '../components/BlogCategories.vue'
+import { useAuthStore } from '../stores/auth'
+import { ElNotification } from 'element-plus'
+import { useRouter } from 'vue-router'
+
+const authStore = useAuthStore()
+const router = useRouter()
+
+watch(() => authStore.loggedInUserFetchError, () => {
+  if (Object.keys(authStore.loggedInUserFetchError).length) {
+    ElNotification({
+      title: 'Failed to fetch user data',
+      message: authStore.loggedInUserFetchError.message,
+      type: 'error',
+      offset: 100
+    })
+    router.push({ name: 'signin' })
+  }
+})
+
+onBeforeMount(() => {
+  authStore.getLoggedInUserData()
+})
 
 const blogs = ref([1, 2, 3, 4, 5, 6])
 </script>
+
+<style scoped>
+body {
+  margin: 0;
+}
+.example-showcase .el-loading-mask {
+  z-index: 2;
+}
+</style>
