@@ -1,14 +1,40 @@
 <template>
   <div class="grid grid-cols-4 gap-8 container mx-auto mt-4">
+    <div v-if="!blogStore.getBlogsSuccess" class="col-span-4 grid w-full">
+      <el-skeleton :rows="0" animated class="w-full" />
+    </div>
+
+    <div v-if="!blogStore.getBlogsSuccess" class="col-span-4 grid grid-cols-3 gap-4">
+      <el-skeleton
+        style="width: 240px"
+        v-for="(blog, index) in [1, 2, 3, 4, 5, 6]"
+        :key="index"
+        animated
+      >
+        <template #template>
+          <el-skeleton-item variant="image" style="width: 240px; height: 240px" />
+          <div style="padding: 14px">
+            <el-skeleton-item variant="p" style="width: 50%" />
+            <div style="display: flex; align-items: center; justify-items: space-between">
+              <el-skeleton-item variant="text" style="margin-right: 16px" />
+              <el-skeleton-item variant="text" style="width: 30%" />
+            </div>
+          </div>
+        </template>
+      </el-skeleton>
+    </div>
+
     <el-pagination
+      v-if="blogStore.getBlogsSuccess"
       small
       background
       layout="prev, pager, next"
-      :total="50"
+      :total="blogStore.blogsWithPagination.totalBlogs"
       class="mt-4 col-span-4"
+      @current-change="(pageNumber) => blogStore.getBlogs(pageNumber)"
     />
-    <div class="col-span-3 grid grid-cols-3 gap-4">
-      <blog-card :blogs="blogs" class="col-span-1" />
+    <div v-if="blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
+      <blog-card :blogs="blogStore.blogsWithPagination.result" class="col-span-1" />
     </div>
     <div class="col-span-1">
       <BlogCategories />
@@ -17,9 +43,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ElNotification } from 'element-plus'
+import { onBeforeMount, watch } from 'vue'
 import BlogCard from '../components/BlogCard.vue'
 import BlogCategories from '../components/BlogCategories.vue'
+import { useBlogStore } from '../stores/blog'
 
-const blogs = ref([1, 2, 3, 4, 5, 6])
+const blogStore = useBlogStore()
+
+onBeforeMount(() => {
+  if (Object.keys(blogStore.blogsWithPagination).length == 0) {
+    blogStore.getBlogs()
+  }
+})
+
+watch(
+  () => blogStore.getBlogsError,
+  () => {
+    if (Object.keys(blogStore.getBlogsError).length) {
+      ElNotification({
+        title: 'Failed to fetch blogs',
+        message: blogStore.getBlogsError.message,
+        type: 'error',
+        offset: 100
+      })
+    }
+  }
+)
 </script>

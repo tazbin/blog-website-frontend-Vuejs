@@ -56,17 +56,20 @@ import { useRouter } from 'vue-router'
 const authStore = useAuthStore()
 const router = useRouter()
 
-watch(() => authStore.loggedInUserFetchError, () => {
-  if (Object.keys(authStore.loggedInUserFetchError).length) {
-    ElNotification({
-      title: 'Failed to fetch user data',
-      message: authStore.loggedInUserFetchError.message,
-      type: 'error',
-      offset: 100
-    })
-    router.push({ name: 'signin' })
+watch(
+  () => authStore.loggedInUserFetchError,
+  () => {
+    if (Object.keys(authStore.loggedInUserFetchError).length) {
+      ElNotification({
+        title: 'Failed to fetch user data',
+        message: authStore.loggedInUserFetchError.message,
+        type: 'error',
+        offset: 100
+      })
+      router.push({ name: 'signin' })
+    }
   }
-})
+)
 
 onBeforeMount(() => {
   authStore.getLoggedInUserData()

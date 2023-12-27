@@ -91,8 +91,7 @@ export const useAuthStore = defineStore('auth', () => {
             clearLocalStorage()
             resetLoginState()
           })
-      }, 4000);
-
+      }, 4000)
     }
   }
 
