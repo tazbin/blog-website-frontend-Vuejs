@@ -63,6 +63,62 @@ export const useBlogStore = defineStore('blog', () => {
     }, 4000)
   }
 
+  const postCommentSuccess = ref(false)
+  const postCommentError = ref({})
+  const isPostCommentLoading = ref(false)
+
+  const postComment = (commentData) => {
+    postCommentSuccess.value = false
+    postCommentError.value = {}
+    isPostCommentLoading.value = false
+
+    makeApiRequest({
+      url: 'http://localhost:3000/blog/comment',
+      method: 'post',
+      payload: {
+        blogId: commentData.blogId,
+        body: commentData.body
+      }
+    })
+      .then(() => {
+        postCommentSuccess.value = true
+        postCommentError.value = {}
+        isPostCommentLoading.value = false
+      })
+      .catch((err) => {
+        postCommentSuccess.value = false
+        postCommentError.value = err.response.data.error
+        isPostCommentLoading.value = false
+      })
+  }
+
+  const categories = ref([])
+  const getCategoriesSuccess = ref(false)
+  const getCategoriesError = ref({})
+  const isGetCategoriesLoading = ref(false)
+
+  const getCategories = () => {
+    categories.value = []
+    getCategoriesSuccess.value = false
+    getCategoriesError.value = {}
+    isGetCategoriesLoading.value = false
+
+    makeApiRequest({
+      url: 'http://localhost:3000/category/categorizedBlogs/all',
+      method: 'get'
+    })
+      .then((res) => {
+        categories.value = res.data
+        getCategoriesSuccess.value = true
+        isGetCategoriesLoading.value = false
+      })
+      .catch((err) => {
+        postCommentSuccess.value = false
+        postCommentError.value = err.response.data.error
+        isPostCommentLoading.value = false
+      })
+  }
+
   return {
     blogsWithPagination,
     getBlogsSuccess,
@@ -74,6 +130,17 @@ export const useBlogStore = defineStore('blog', () => {
     blogDetailsSuccess,
     blogDetailsError,
     isBlogDetailsLoading,
-    getBlogDetails
+    getBlogDetails,
+
+    postCommentSuccess,
+    postCommentError,
+    isPostCommentLoading,
+    postComment,
+
+    categories,
+    getCategoriesSuccess,
+    getCategoriesError,
+    isGetCategoriesLoading,
+    getCategories,
   }
 })

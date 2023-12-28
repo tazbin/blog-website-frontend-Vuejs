@@ -25,7 +25,7 @@
     </div>
 
     <el-pagination
-      v-if="blogStore.getBlogsSuccess"
+      v-show="blogStore.getBlogsSuccess"
       small
       background
       layout="prev, pager, next"

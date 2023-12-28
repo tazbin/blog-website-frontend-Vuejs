@@ -1,14 +1,17 @@
 <template>
   <div class="container mx-auto my-4 flex">
-    <div class="w-2/3">
+    <div v-if="!Object.keys(blogStore.blogDetails).length" class="w-2/3">
+      <el-skeleton :rows="5" animated />
+    </div>
+    <div v-else class="w-2/3">
       <div>
         <img :src="blogStore.blogDetails.img" class="w-full h-48 object-cover" />
       </div>
       <p class="text-xl py-2">{{ blogStore.blogDetails.title }}</p>
-      <p>
+      <p class="mb-4">
         {{ blogStore.blogDetails.body }}
       </p>
-      <div class="py-2 mb-2">
+      <div class="py-2 mb-4">
         <el-badge
           :value="blogStore.blogDetails.reacts.like.length"
           class="item mr-4"
@@ -42,7 +45,7 @@
         </el-badge>
       </div>
 
-      <div class="my-4">
+      <div v-if="authStore.isAuthenticated" class="mb-4">
         <el-form
           ref="commentRef"
           :model="commentForm"
@@ -59,8 +62,8 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm(commentRef)">Sign in</el-button>
-            <el-button @click="resetForm(commentRef)">Cancel</el-button>
+            <el-button type="primary" @click="submitForm(commentRef)">Comment</el-button>
+            <el-button @click="resetForm(commentRef)">Clear</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -80,7 +83,11 @@
         </div>
       </div>
     </div>
-    <div class="w-1/3 pl-12">
+
+    <div v-if="!Object.keys(blogStore.blogDetails).length" class="w-1/3 pl-12">
+      <el-skeleton :rows="2" animated />
+    </div>
+    <div v-else class="w-1/3 pl-12">
       <div class="bg-gray-50 p-4 rounded text-center mb-4 shadow-md">
         <p class="text-xl">{{ blogStore.blogDetails.writter.first_name }}</p>
         <router-link
@@ -99,6 +106,7 @@
 import { ElNotification } from 'element-plus'
 import { onBeforeMount, reactive, ref, watch } from 'vue'
 import BlogCategories from '../components/BlogCategories.vue'
+import { useAuthStore } from '../stores/auth'
 import { useBlogStore } from '../stores/blog'
 
 const { id } = defineProps({
@@ -108,10 +116,12 @@ const { id } = defineProps({
   }
 })
 
+const authStore = useAuthStore()
 const blogStore = useBlogStore()
 
 onBeforeMount(() => {
   blogStore.getBlogDetails(id)
+  blogStore.getCategories()
 })
 
 watch(
@@ -152,12 +162,48 @@ const submitForm = (commentEl) => {
 
   commentEl.validate((valid) => {
     if (valid) {
-      console.log(commentForm)
+      blogStore.postComment({
+        blogId: id,
+        body: commentForm.text
+      })
     } else {
-      console.log('Invalid comment')
+      ElNotification({
+        title: 'Comment',
+        message: 'Invalid comment',
+        type: 'error',
+        offset: 100
+      })
     }
   })
 }
+
+watch(
+  () => blogStore.postCommentSuccess,
+  () => {
+    if (blogStore.postCommentSuccess) {
+      ElNotification({
+        title: 'Comment',
+        message: 'New comment added',
+        type: 'success',
+        offset: 100
+      })
+    }
+  }
+)
+
+watch(
+  () => blogStore.postCommentError,
+  () => {
+    if (Object.keys(blogStore.postCommentError).length) {
+      ElNotification({
+        title: 'Comment',
+        message: blogStore.postCommentError.message,
+        type: 'error',
+        offset: 100
+      })
+    }
+  }
+)
 
 const resetForm = (commentEl) => {
   if (!commentEl) {
