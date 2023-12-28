@@ -4,7 +4,7 @@
       <el-skeleton :rows="0" animated class="w-full" />
     </div>
 
-    <div v-if="!blogStore.getBlogsSuccess" class="col-span-4 grid grid-cols-3 gap-4">
+    <div v-if="!blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
       <el-skeleton
         style="width: 240px"
         v-for="(blog, index) in [1, 2, 3, 4, 5, 6]"

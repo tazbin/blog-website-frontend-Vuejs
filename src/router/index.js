@@ -54,8 +54,7 @@ const router = createRouter({
       path: '/profile/:id',
       name: 'profile-page',
       propes: true,
-      component: ProfilePage,
-      beforeEnter: authGuard
+      component: ProfilePage
     }
   ]
 })

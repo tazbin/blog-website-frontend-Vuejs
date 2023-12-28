@@ -1,25 +1,28 @@
 <template>
-  <div
-    class="p-4 mb-2 bg-slate-100 rounded cursor-pointer hover:bg-slate-200"
-    @click="viewCategorizedBlogs({ _id: 'all' })"
-  >
-    All
-    <span class="bg-slate-300 px-3 rounded-lg">
-      {{ blogStore.categories.reduce((count, category) => count + category.count, 0) }}
-    </span>
-  </div>
-  <div
-    v-for="(category, index) in blogStore.categories"
-    :key="index"
-    class="p-4 mb-2 bg-slate-100 rounded cursor-pointer hover:bg-slate-200"
-    @click="viewCategorizedBlogs(category)"
-  >
-    {{ category.name }} <span class="bg-slate-300 px-3 rounded-lg"> {{ category.count }} </span>
+  <el-skeleton v-if="!blogStore.getCategoriesSuccess" :rows="5" animated class="w-full" />
+  <div v-else>
+    <div
+      class="p-4 mb-2 bg-slate-100 rounded cursor-pointer hover:bg-slate-200"
+      @click="viewCategorizedBlogs({ _id: 'all' })"
+    >
+      All
+      <span class="bg-slate-300 px-3 rounded-lg">
+        {{ blogStore.categories.reduce((count, category) => count + category.count, 0) }}
+      </span>
+    </div>
+    <div
+      v-for="(category, index) in blogStore.categories"
+      :key="index"
+      class="p-4 mb-2 bg-slate-100 rounded cursor-pointer hover:bg-slate-200"
+      @click="viewCategorizedBlogs(category)"
+    >
+      {{ category.name }} <span class="bg-slate-300 px-3 rounded-lg"> {{ category.count }} </span>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElSkeleton } from 'element-plus'
 import { onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useBlogStore } from '../stores/blog'

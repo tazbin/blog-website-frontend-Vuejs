@@ -108,20 +108,23 @@ export const useBlogStore = defineStore('blog', () => {
     getCategoriesError.value = {}
     isGetCategoriesLoading.value = false
 
-    makeApiRequest({
-      url: 'http://localhost:3000/category/categorizedBlogs/all',
-      method: 'get'
-    })
-      .then((res) => {
-        categories.value = res.data
-        getCategoriesSuccess.value = true
-        isGetCategoriesLoading.value = false
+    setTimeout(() => {
+      makeApiRequest({
+        url: 'http://localhost:3000/category/categorizedBlogs/all',
+        method: 'get'
       })
-      .catch((err) => {
-        postCommentSuccess.value = false
-        postCommentError.value = err.response.data.error
-        isPostCommentLoading.value = false
-      })
+        .then((res) => {
+          categories.value = res.data
+          getCategoriesSuccess.value = true
+          isGetCategoriesLoading.value = false
+        })
+        .catch((err) => {
+          postCommentSuccess.value = false
+          postCommentError.value = err.response.data.error
+          isPostCommentLoading.value = false
+        })
+    }, 4000);
+
   }
 
   return {
