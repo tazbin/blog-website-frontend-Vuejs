@@ -62,7 +62,7 @@ watchEffect(() => {
       offset: 100
     })
 
-    router.push({ name: 'profile-page', params: { id: authStore.user._id } })
+    router.push({ name: 'profile-page', params: { bloggerId: authStore.user._id } })
   }
 
   if (Object.keys(authStore.loginError).length) {

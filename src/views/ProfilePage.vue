@@ -128,7 +128,6 @@ watch(
 )
 
 onBeforeMount(() => {
-  console.log('mounted')
   authStore.getBloggerProfileData(props.bloggerId)
   blogStore.getBloggerBlogs({
     bloggerId: props.bloggerId,

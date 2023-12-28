@@ -46,8 +46,6 @@ export const useBlogStore = defineStore('blog', () => {
     getBlogsSuccess.value = false
     isGetBlogsLoading.value = true
 
-    console.log(blogCriterions)
-
     setTimeout(() => {
       let url = `http://localhost:3000/blog/${blogCriterions.bloggerId}/${blogCriterions.categoryId}`
 
