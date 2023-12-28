@@ -9,6 +9,7 @@ export const useBlogStore = defineStore('blog', () => {
   const isGetBlogsLoading = ref(false)
 
   const getBlogs = (blogCriterions) => {
+    blogsWithPagination.value = {}
     getBlogsError.value = {}
     getBlogsSuccess.value = false
     isGetBlogsLoading.value = true
@@ -18,6 +19,37 @@ export const useBlogStore = defineStore('blog', () => {
       if (blogCriterions.categoryId) {
         url += `/${blogCriterions.categoryId}`
       }
+
+      makeApiRequest({
+        url,
+        params: {
+          page: blogCriterions.page ?? 1
+        },
+        method: 'get'
+      })
+        .then((res) => {
+          blogsWithPagination.value = res.data
+          getBlogsSuccess.value = true
+          isGetBlogsLoading.value = false
+        })
+        .catch((err) => {
+          getBlogsSuccess.value = false
+          getBlogsError.value = err.response.data.error
+          isGetBlogsLoading.value = false
+        })
+    }, 4000)
+  }
+
+  const getBloggerBlogs = (blogCriterions) => {
+    blogsWithPagination.value = {}
+    getBlogsError.value = {}
+    getBlogsSuccess.value = false
+    isGetBlogsLoading.value = true
+
+    console.log(blogCriterions)
+
+    setTimeout(() => {
+      let url = `http://localhost:3000/blog/${blogCriterions.bloggerId}/${blogCriterions.categoryId}`
 
       makeApiRequest({
         url,
@@ -126,12 +158,37 @@ export const useBlogStore = defineStore('blog', () => {
     }, 4000)
   }
 
+  const getBloggerBlogCategories = (bloggerId) => {
+    categories.value = []
+    getCategoriesSuccess.value = false
+    getCategoriesError.value = {}
+    isGetCategoriesLoading.value = false
+
+    setTimeout(() => {
+      makeApiRequest({
+        url: 'http://localhost:3000/category/categorizedBlogs/' + bloggerId,
+        method: 'get'
+      })
+        .then((res) => {
+          categories.value = res.data
+          getCategoriesSuccess.value = true
+          isGetCategoriesLoading.value = false
+        })
+        .catch((err) => {
+          postCommentSuccess.value = false
+          postCommentError.value = err.response.data.error
+          isPostCommentLoading.value = false
+        })
+    }, 4000)
+  }
+
   return {
     blogsWithPagination,
     getBlogsSuccess,
     getBlogsError,
     isGetBlogsLoading,
     getBlogs,
+    getBloggerBlogs,
 
     blogDetails,
     blogDetailsSuccess,
@@ -148,6 +205,7 @@ export const useBlogStore = defineStore('blog', () => {
     getCategoriesSuccess,
     getCategoriesError,
     isGetCategoriesLoading,
-    getCategories
+    getCategories,
+    getBloggerBlogCategories,
   }
 })

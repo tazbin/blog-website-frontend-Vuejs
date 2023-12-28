@@ -27,21 +27,49 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-4 gap-8 container mx-auto mt-14">
-      <el-pagination
-        small
-        background
-        layout="prev, pager, next"
-        :total="50"
-        class="mt-4 col-span-4"
-      />
-      <div class="col-span-3 grid grid-cols-3 gap-4">
-        <!-- <blog-card :blogs="blogs" class="col-span-1" /> -->
-      </div>
-      <div class="col-span-1">
-        <BlogCategories />
-      </div>
+    <div class="grid grid-cols-4 gap-8 container mx-auto mt-4">
+    <div v-if="!blogStore.getBlogsSuccess" class="col-span-4 grid w-full">
+      <el-skeleton :rows="0" animated class="w-full" />
     </div>
+
+    <div v-if="!blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
+      <el-skeleton
+        style="width: 240px"
+        v-for="(blog, index) in [1, 2, 3, 4, 5, 6]"
+        :key="index"
+        animated
+      >
+        <template #template>
+          <el-skeleton-item variant="image" style="width: 240px; height: 240px" />
+          <div style="padding: 14px">
+            <el-skeleton-item variant="p" style="width: 50%" />
+            <div style="display: flex; align-items: center; justify-items: space-between">
+              <el-skeleton-item variant="text" style="margin-right: 16px" />
+              <el-skeleton-item variant="text" style="width: 30%" />
+            </div>
+          </div>
+        </template>
+      </el-skeleton>
+    </div>
+
+    <el-pagination
+      v-show="blogStore.getBlogsSuccess"
+      small
+      background
+      layout="prev, pager, next"
+      :current-page="currentPage"
+      :total="blogStore.blogsWithPagination.totalBlogs"
+      class="mt-4 col-span-4"
+      @current-change="(pageNumber) => paginate(pageNumber)"
+    />
+    <div v-if="blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
+      <blog-card :blogs="blogStore.blogsWithPagination.result" class="col-span-1" />
+    </div>
+    <div class="col-span-1">
+      <BlogCategories v-if="authStore.bloggerProfile._id" :profiled-categories="true" />
+    </div>
+  </div>
+
   </div>
 </template>
 
@@ -51,12 +79,25 @@ import BlogCard from '../components/BlogCard.vue'
 import BlogCategories from '../components/BlogCategories.vue'
 import { useAuthStore } from '../stores/auth'
 import { ElNotification } from 'element-plus'
+import { useBlogStore } from '../stores/blog'
 
 const props = defineProps({
-  bloggerId: String
+  bloggerId: String,
+  categoryId: {
+    type: String,
+    default: null
+  },
 })
 
 const authStore = useAuthStore()
+const blogStore = useBlogStore()
+
+const currentPage = ref(1)
+
+const paginate = (pageNumber) => {
+  currentPage.value = pageNumber
+  blogStore.getBloggerBlogs({ bloggerId: props.bloggerId, categoryId: props.categoryId || 'all', page: pageNumber })
+}
 
 watch(
   () => authStore.bloggerProfileError,
@@ -72,16 +113,33 @@ watch(
   }
 )
 
+watch(
+  () => blogStore.getBlogsError,
+  () => {
+    if (Object.keys(blogStore.getBlogsError).length) {
+      ElNotification({
+        title: 'Failed to fetch blogs',
+        message: blogStore.getBlogsError.message,
+        type: 'error',
+        offset: 100
+      })
+    }
+  }
+)
+
 onBeforeMount(() => {
-  console.log(props.bloggerId)
+  console.log('mounted')
+  authStore.getBloggerProfileData(props.bloggerId)
+  blogStore.getBloggerBlogs({
+    bloggerId: props.bloggerId,
+    categoryId: props.categoryId || 'all'
+  })
+})
+
+watch(() => props.bloggerId, () => {
   authStore.getBloggerProfileData(props.bloggerId)
 })
 
-// watch(() => props.bloggerId, () => {
-//   authStore.getBloggerProfileData(props.bloggerId)
-// })
-
-const blogs = ref([1, 2, 3, 4, 5, 6])
 </script>
 
 <style scoped>

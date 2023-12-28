@@ -51,7 +51,7 @@ const router = createRouter({
       beforeEnter: noAuthGuard
     },
     {
-      path: '/profile/:bloggerId',
+      path: '/profile/:bloggerId/:categoryId?',
       name: 'profile-page',
       props: true,
       component: ProfilePage

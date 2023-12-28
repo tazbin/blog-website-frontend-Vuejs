@@ -1,6 +1,7 @@
 <template>
   <el-skeleton v-if="!blogStore.getCategoriesSuccess" :rows="5" animated class="w-full" />
   <div v-else>
+    <h2 v-if="props.profiledCategories" class="mb-4"> {{ authStore.bloggerProfile.first_name }}'s categories </h2>
     <div
       class="p-4 mb-2 bg-slate-100 rounded cursor-pointer hover:bg-slate-200"
       @click="viewCategorizedBlogs({ _id: 'all' })"
@@ -25,13 +26,26 @@
 import { ElNotification, ElSkeleton } from 'element-plus'
 import { onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 import { useBlogStore } from '../stores/blog'
 
+const props = defineProps({
+  profiledCategories: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const authStore = useAuthStore()
 const blogStore = useBlogStore()
 const router = useRouter()
 
 onBeforeMount(() => {
-  blogStore.getCategories()
+  if( props.profiledCategories ) {
+    blogStore.getBloggerBlogCategories(authStore.bloggerProfile._id)
+  } else {
+    blogStore.getCategories()
+  }
 })
 
 watch(
@@ -49,6 +63,14 @@ watch(
 )
 
 const viewCategorizedBlogs = (category) => {
-  router.push({ name: 'blogs', params: { categoryId: category._id } })
+  if( props.profiledCategories ) {
+    // router.push({ name: 'profile-page', params: { bloggerId: authStore.bloggerProfile._id, categoryId: category._id } })
+    blogStore.getBloggerBlogs({
+      bloggerId: authStore.bloggerProfile._id, 
+      categoryId: category._id
+    })
+  } else {
+    router.push({ name: 'blogs', params: { categoryId: category._id } })
+  }
 }
 </script>

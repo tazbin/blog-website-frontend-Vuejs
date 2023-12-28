@@ -1,10 +1,10 @@
 <template>
   <div class="grid grid-cols-4 gap-8 container mx-auto mt-4">
-    <div v-if="!blogStore.getBlogsSuccess" class="col-span-4 grid w-full">
+    <div v-show="!blogStore.getBlogsSuccess" class="col-span-4 grid w-full">
       <el-skeleton :rows="0" animated class="w-full" />
     </div>
 
-    <div v-if="!blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
+    <div v-show="!blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
       <el-skeleton
         style="width: 240px"
         v-for="(blog, index) in [1, 2, 3, 4, 5, 6]"
@@ -34,7 +34,7 @@
       class="mt-4 col-span-4"
       @current-change="(pageNumber) => paginate(pageNumber)"
     />
-    <div v-if="blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
+    <div v-show="blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
       <blog-card :blogs="blogStore.blogsWithPagination.result" class="col-span-1" />
     </div>
     <div class="col-span-1">
@@ -59,11 +59,9 @@ const currentPage = ref(1)
 const blogStore = useBlogStore()
 
 onBeforeMount(() => {
-  if (Object.keys(blogStore.blogsWithPagination).length == 0) {
-    blogStore.getBlogs({
-      categoryId: props.categoryId
-    })
-  }
+  blogStore.getBlogs({
+    categoryId: props.categoryId
+  })
 })
 
 const paginate = (pageNumber) => {

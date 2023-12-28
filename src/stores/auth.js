@@ -104,7 +104,7 @@ export const useAuthStore = defineStore('auth', () => {
     bloggerProfile.value = {}
     bloggerProfileError.value = {}
     bloggerProfileSuccess.value = false
-    isBloggerProfileLoading.value = false
+    isBloggerProfileLoading.value = true
 
     setTimeout(() => {
       makeApiRequest({
