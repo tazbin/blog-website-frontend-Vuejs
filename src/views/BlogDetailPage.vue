@@ -92,7 +92,7 @@
         <p class="text-xl">{{ blogStore.blogDetails.writter.first_name }}</p>
         <router-link
           class="bg-gray-200 block p-2 rounded mt-4"
-          :to="{ name: 'profile-page', params: { id: blogStore.blogDetails.writter._id } }"
+          :to="{ name: 'profile-page', params: { bloggerId: blogStore.blogDetails.writter._id } }"
         >
           View profile
         </router-link>

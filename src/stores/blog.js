@@ -123,8 +123,7 @@ export const useBlogStore = defineStore('blog', () => {
           postCommentError.value = err.response.data.error
           isPostCommentLoading.value = false
         })
-    }, 4000);
-
+    }, 4000)
   }
 
   return {

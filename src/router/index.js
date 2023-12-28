@@ -5,14 +5,14 @@ import BlogsPage from '../views/BlogsPage.vue'
 import BlogDetailPage from '../views/BlogDetailPage.vue'
 import { useAuthStore } from '../stores/auth'
 
-const authGuard = (to, from, next) => {
-  const authStore = useAuthStore()
-  if (authStore.isAuthenticated) {
-    next()
-  } else {
-    next({ name: 'signin' })
-  }
-}
+// const authGuard = (to, from, next) => {
+//   const authStore = useAuthStore()
+//   if (authStore.isAuthenticated) {
+//     next()
+//   } else {
+//     next({ name: 'signin' })
+//   }
+// }
 
 const noAuthGuard = (to, from, next) => {
   const authStore = useAuthStore()
@@ -51,9 +51,9 @@ const router = createRouter({
       beforeEnter: noAuthGuard
     },
     {
-      path: '/profile/:id',
+      path: '/profile/:bloggerId',
       name: 'profile-page',
-      propes: true,
+      props: true,
       component: ProfilePage
     }
   ]

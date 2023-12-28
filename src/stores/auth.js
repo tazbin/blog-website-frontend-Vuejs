@@ -95,6 +95,34 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const bloggerProfile = ref({})
+  const bloggerProfileSuccess = ref(false)
+  const bloggerProfileError = ref({})
+  const isBloggerProfileLoading = ref(false)
+
+  const getBloggerProfileData = (bloggerId) => {
+    bloggerProfile.value = {}
+    bloggerProfileError.value = {}
+    bloggerProfileSuccess.value = false
+    isBloggerProfileLoading.value = false
+
+    setTimeout(() => {
+      makeApiRequest({
+        url: 'http://localhost:3000/user/bloggerProfile/' + bloggerId,
+        method: 'get'
+      })
+        .then((res) => {
+          bloggerProfileSuccess.value = true
+          bloggerProfile.value = res.data
+          isBloggerProfileLoading.value = false
+        })
+        .catch((err) => {
+          bloggerProfileError.value = err.response.data.error
+          isBloggerProfileLoading.value = false
+        })
+    }, 4000)
+  }
+
   const registerLoading = ref(false)
   const registerError = ref({})
   const registerSuccess = ref(false)
@@ -154,6 +182,12 @@ export const useAuthStore = defineStore('auth', () => {
     loggedInUserFetchError,
     loggedInUserFetchSuccess,
     getLoggedInUserData,
+
+    bloggerProfile,
+    bloggerProfileSuccess,
+    bloggerProfileError,
+    isBloggerProfileLoading,
+    getBloggerProfileData,
 
     register,
     registerError,

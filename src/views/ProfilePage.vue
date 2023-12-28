@@ -1,29 +1,29 @@
 <template>
   <div class="container mx-auto my-8">
-    <el-skeleton v-if="!authStore.loggedInUserFetchSuccess" :rows="5" animated />
+    <el-skeleton v-if="!authStore.bloggerProfileSuccess" :rows="5" animated />
     <div v-else class="grid grid-cols-10 gap-2">
       <div class="col-span-2">
-        <img :src="authStore.user.img" class="h-48 object-cover rounded" />
+        <img :src="authStore.bloggerProfile.img" class="h-48 object-cover rounded" />
       </div>
 
       <div class="col-span-2">
         <span class="font-bold mb-2 inline-block"> First name: </span>
-        {{ authStore.user.first_name }}
+        {{ authStore.bloggerProfile.first_name }}
         <br />
-        <span class="font-bold mb-2 inline-block"> Last name: </span> {{ authStore.user.last_name }}
+        <span class="font-bold mb-2 inline-block"> Last name: </span> {{ authStore.bloggerProfile.last_name }}
         <br />
-        <span class="font-bold mb-2 inline-block"> Email: </span> {{ authStore.user.email }}
+        <span class="font-bold mb-2 inline-block"> Email: </span> {{ authStore.bloggerProfile.email }}
         <br />
-        <span class="font-bold mb-2 inline-block"> Job: </span> {{ authStore.user.job }}
+        <span class="font-bold mb-2 inline-block"> Job: </span> {{ authStore.bloggerProfile.job }}
         <br />
-        <span class="font-bold mb-2 inline-block"> Joined: </span> {{ authStore.user.joined }}
+        <span class="font-bold mb-2 inline-block"> Joined: </span> {{ authStore.bloggerProfile.joined }}
         <br />
-        <span class="font-bold mb-2 inline-block"> Address: </span> {{ authStore.user.address }}
+        <span class="font-bold mb-2 inline-block"> Address: </span> {{ authStore.bloggerProfile.address }}
         <br />
       </div>
 
       <div class="col-span-6">
-        {{ authStore.user.about }}
+        {{ authStore.bloggerProfile.about }}
       </div>
     </div>
 
@@ -36,7 +36,7 @@
         class="mt-4 col-span-4"
       />
       <div class="col-span-3 grid grid-cols-3 gap-4">
-        <blog-card :blogs="blogs" class="col-span-1" />
+        <!-- <blog-card :blogs="blogs" class="col-span-1" /> -->
       </div>
       <div class="col-span-1">
         <BlogCategories />
@@ -51,29 +51,35 @@ import BlogCard from '../components/BlogCard.vue'
 import BlogCategories from '../components/BlogCategories.vue'
 import { useAuthStore } from '../stores/auth'
 import { ElNotification } from 'element-plus'
-import { useRouter } from 'vue-router'
+
+const props = defineProps({
+  bloggerId: String
+})
 
 const authStore = useAuthStore()
-const router = useRouter()
 
 watch(
-  () => authStore.loggedInUserFetchError,
+  () => authStore.bloggerProfileError,
   () => {
-    if (Object.keys(authStore.loggedInUserFetchError).length) {
+    if (Object.keys(authStore.bloggerProfileError).length) {
       ElNotification({
-        title: 'Failed to fetch user data',
-        message: authStore.loggedInUserFetchError.message,
+        title: 'Failed to fetch blogger data',
+        message: authStore.bloggerProfileError.message,
         type: 'error',
         offset: 100
       })
-      router.push({ name: 'signin' })
     }
   }
 )
 
 onBeforeMount(() => {
-  authStore.getLoggedInUserData()
+  console.log(props.bloggerId)
+  authStore.getBloggerProfileData(props.bloggerId)
 })
+
+// watch(() => props.bloggerId, () => {
+//   authStore.getBloggerProfileData(props.bloggerId)
+// })
 
 const blogs = ref([1, 2, 3, 4, 5, 6])
 </script>
