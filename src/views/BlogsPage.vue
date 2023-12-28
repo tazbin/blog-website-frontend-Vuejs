@@ -29,9 +29,10 @@
       small
       background
       layout="prev, pager, next"
+      :current-page="currentPage"
       :total="blogStore.blogsWithPagination.totalBlogs"
       class="mt-4 col-span-4"
-      @current-change="(pageNumber) => blogStore.getBlogs(pageNumber)"
+      @current-change="(pageNumber) => paginate(pageNumber)"
     />
     <div v-if="blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
       <blog-card :blogs="blogStore.blogsWithPagination.result" class="col-span-1" />
@@ -44,18 +45,41 @@
 
 <script setup>
 import { ElNotification } from 'element-plus'
-import { onBeforeMount, watch } from 'vue'
-import BlogCard from '../components/BlogCard.vue'
+import { onBeforeMount, ref, watch } from 'vue'
+import BlogCard from '../components/blogcard.vue'
 import BlogCategories from '../components/BlogCategories.vue'
 import { useBlogStore } from '../stores/blog'
+
+const props = defineProps({
+  categoryId: String
+})
+
+const currentPage = ref(1)
 
 const blogStore = useBlogStore()
 
 onBeforeMount(() => {
   if (Object.keys(blogStore.blogsWithPagination).length == 0) {
-    blogStore.getBlogs()
+    blogStore.getBlogs({
+      categoryId: props.categoryId
+    })
   }
 })
+
+const paginate = (pageNumber) => {
+  currentPage.value = pageNumber
+  blogStore.getBlogs({ categoryId: props.categoryId, page: pageNumber })
+}
+
+watch(
+  () => props.categoryId,
+  () => {
+    currentPage.value = 1
+    blogStore.getBlogs({
+      categoryId: props.categoryId
+    })
+  }
+)
 
 watch(
   () => blogStore.getBlogsError,

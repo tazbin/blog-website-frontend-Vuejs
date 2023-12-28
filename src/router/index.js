@@ -27,9 +27,10 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/:categoryId?',
       name: 'blogs',
-      component: BlogsPage
+      component: BlogsPage,
+      props: true
     },
     {
       path: '/blogs/:id',

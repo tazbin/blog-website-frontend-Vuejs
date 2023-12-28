@@ -8,16 +8,21 @@ export const useBlogStore = defineStore('blog', () => {
   const getBlogsError = ref({})
   const isGetBlogsLoading = ref(false)
 
-  const getBlogs = (page = 1) => {
+  const getBlogs = (blogCriterions) => {
     getBlogsError.value = {}
     getBlogsSuccess.value = false
     isGetBlogsLoading.value = true
 
     setTimeout(() => {
+      let url = 'http://localhost:3000/blog/all'
+      if (blogCriterions.categoryId) {
+        url += `/${blogCriterions.categoryId}`
+      }
+
       makeApiRequest({
-        url: 'http://localhost:3000/blog/all',
+        url,
         params: {
-          page
+          page: blogCriterions.page ?? 1
         },
         method: 'get'
       })
@@ -141,6 +146,6 @@ export const useBlogStore = defineStore('blog', () => {
     getCategoriesSuccess,
     getCategoriesError,
     isGetCategoriesLoading,
-    getCategories,
+    getCategories
   }
 })
