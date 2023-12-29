@@ -204,6 +204,6 @@ export const useBlogStore = defineStore('blog', () => {
     getCategoriesError,
     isGetCategoriesLoading,
     getCategories,
-    getBloggerBlogCategories,
+    getBloggerBlogCategories
   }
 })

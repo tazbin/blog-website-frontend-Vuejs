@@ -1,6 +1,12 @@
 <template>
   <div class="container mx-auto">
-    <el-menu :router="true" :default-active="route.name" class="el-menu-demo" mode="horizontal" :ellipsis="false">
+    <el-menu
+      :router="true"
+      :default-active="route.name"
+      class="el-menu-demo"
+      mode="horizontal"
+      :ellipsis="false"
+    >
       <el-menu-item index="0">
         <h1 class="text-xl">LET'S BLOG</h1>
       </el-menu-item>

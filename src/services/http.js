@@ -33,7 +33,7 @@ export const axiosInstance = (() => {
 
       const refreshToken = localStorage.getItem('refresh-token')
 
-      if( error.response && error.response.status == 401 && refreshToken ) {
+      if (error.response && error.response.status == 401 && refreshToken) {
         try {
           const response = await axiosInstance.post('http://localhost:3000/user/me/refresToken', {
             refreshToken
@@ -45,7 +45,7 @@ export const axiosInstance = (() => {
           originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`
 
           return axiosInstance(originalRequest)
-        } catch(err) {
+        } catch (err) {
           return Promise.reject(err)
         }
       }

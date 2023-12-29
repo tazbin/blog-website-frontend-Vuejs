@@ -10,15 +10,19 @@
         <span class="font-bold mb-2 inline-block"> First name: </span>
         {{ authStore.bloggerProfile.first_name }}
         <br />
-        <span class="font-bold mb-2 inline-block"> Last name: </span> {{ authStore.bloggerProfile.last_name }}
+        <span class="font-bold mb-2 inline-block"> Last name: </span>
+        {{ authStore.bloggerProfile.last_name }}
         <br />
-        <span class="font-bold mb-2 inline-block"> Email: </span> {{ authStore.bloggerProfile.email }}
+        <span class="font-bold mb-2 inline-block"> Email: </span>
+        {{ authStore.bloggerProfile.email }}
         <br />
         <span class="font-bold mb-2 inline-block"> Job: </span> {{ authStore.bloggerProfile.job }}
         <br />
-        <span class="font-bold mb-2 inline-block"> Joined: </span> {{ authStore.bloggerProfile.joined }}
+        <span class="font-bold mb-2 inline-block"> Joined: </span>
+        {{ authStore.bloggerProfile.joined }}
         <br />
-        <span class="font-bold mb-2 inline-block"> Address: </span> {{ authStore.bloggerProfile.address }}
+        <span class="font-bold mb-2 inline-block"> Address: </span>
+        {{ authStore.bloggerProfile.address }}
         <br />
       </div>
 
@@ -28,48 +32,47 @@
     </div>
 
     <div class="grid grid-cols-4 gap-8 container mx-auto mt-4">
-    <div v-if="!blogStore.getBlogsSuccess" class="col-span-4 grid w-full">
-      <el-skeleton :rows="0" animated class="w-full" />
-    </div>
+      <div v-if="!blogStore.getBlogsSuccess" class="col-span-4 grid w-full">
+        <el-skeleton :rows="0" animated class="w-full" />
+      </div>
 
-    <div v-if="!blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
-      <el-skeleton
-        style="width: 240px"
-        v-for="(blog, index) in [1, 2, 3, 4, 5, 6]"
-        :key="index"
-        animated
-      >
-        <template #template>
-          <el-skeleton-item variant="image" style="width: 240px; height: 240px" />
-          <div style="padding: 14px">
-            <el-skeleton-item variant="p" style="width: 50%" />
-            <div style="display: flex; align-items: center; justify-items: space-between">
-              <el-skeleton-item variant="text" style="margin-right: 16px" />
-              <el-skeleton-item variant="text" style="width: 30%" />
+      <div v-if="!blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
+        <el-skeleton
+          style="width: 240px"
+          v-for="(blog, index) in [1, 2, 3, 4, 5, 6]"
+          :key="index"
+          animated
+        >
+          <template #template>
+            <el-skeleton-item variant="image" style="width: 240px; height: 240px" />
+            <div style="padding: 14px">
+              <el-skeleton-item variant="p" style="width: 50%" />
+              <div style="display: flex; align-items: center; justify-items: space-between">
+                <el-skeleton-item variant="text" style="margin-right: 16px" />
+                <el-skeleton-item variant="text" style="width: 30%" />
+              </div>
             </div>
-          </div>
-        </template>
-      </el-skeleton>
-    </div>
+          </template>
+        </el-skeleton>
+      </div>
 
-    <el-pagination
-      v-show="blogStore.getBlogsSuccess"
-      small
-      background
-      layout="prev, pager, next"
-      :current-page="currentPage"
-      :total="blogStore.blogsWithPagination.totalBlogs"
-      class="mt-4 col-span-4"
-      @current-change="(pageNumber) => paginate(pageNumber)"
-    />
-    <div v-if="blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
-      <blog-card :blogs="blogStore.blogsWithPagination.result" class="col-span-1" />
+      <el-pagination
+        v-show="blogStore.getBlogsSuccess"
+        small
+        background
+        layout="prev, pager, next"
+        :current-page="currentPage"
+        :total="blogStore.blogsWithPagination.totalBlogs"
+        class="mt-4 col-span-4"
+        @current-change="(pageNumber) => paginate(pageNumber)"
+      />
+      <div v-if="blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
+        <blog-card :blogs="blogStore.blogsWithPagination.result" class="col-span-1" />
+      </div>
+      <div class="col-span-1">
+        <BlogCategories v-if="authStore.bloggerProfile._id" :profiled-categories="true" />
+      </div>
     </div>
-    <div class="col-span-1">
-      <BlogCategories v-if="authStore.bloggerProfile._id" :profiled-categories="true" />
-    </div>
-  </div>
-
   </div>
 </template>
 
@@ -86,7 +89,7 @@ const props = defineProps({
   categoryId: {
     type: String,
     default: null
-  },
+  }
 })
 
 const authStore = useAuthStore()
@@ -96,7 +99,11 @@ const currentPage = ref(1)
 
 const paginate = (pageNumber) => {
   currentPage.value = pageNumber
-  blogStore.getBloggerBlogs({ bloggerId: props.bloggerId, categoryId: props.categoryId || 'all', page: pageNumber })
+  blogStore.getBloggerBlogs({
+    bloggerId: props.bloggerId,
+    categoryId: props.categoryId || 'all',
+    page: pageNumber
+  })
 }
 
 watch(
@@ -135,10 +142,12 @@ onBeforeMount(() => {
   })
 })
 
-watch(() => props.bloggerId, () => {
-  authStore.getBloggerProfileData(props.bloggerId)
-})
-
+watch(
+  () => props.bloggerId,
+  () => {
+    authStore.getBloggerProfileData(props.bloggerId)
+  }
+)
 </script>
 
 <style scoped>
