@@ -51,7 +51,11 @@ import BlogCategories from '../components/BlogCategories.vue'
 import { useBlogStore } from '../stores/blog'
 
 const props = defineProps({
-  categoryId: String
+  categoryId: {
+    type: String,
+    required: false,
+    default: null
+  }
 })
 
 const currentPage = ref(1)

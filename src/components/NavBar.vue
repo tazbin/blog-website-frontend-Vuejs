@@ -7,13 +7,13 @@
       <div class="flex-1" />
 
       <el-menu-item index="signup">
-        <router-link to="/signup">Signup</router-link>
+        <router-link :to="{ name: 'signup' }">Signup</router-link>
       </el-menu-item>
       <el-menu-item index="signin">
-        <router-link to="/signin">Signin</router-link>
+        <router-link :to="{ name: 'signin' }">Signin</router-link>
       </el-menu-item>
-      <el-menu-item index="blogs">
-        <router-link to="/">Blogs</router-link>
+      <el-menu-item index="">
+        <router-link :to="{ name: 'blogs' }">Blogs</router-link>
       </el-menu-item>
       <el-menu-item index="profile-page" v-if="authStore.isAuthenticated">
         <router-link :to="{ name: 'profile-page', params: { bloggerId: authStore.user._id } }"
