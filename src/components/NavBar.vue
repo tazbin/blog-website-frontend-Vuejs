@@ -1,21 +1,21 @@
 <template>
   <div class="container mx-auto">
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false">
+    <el-menu :router="true" :default-active="route.name" class="el-menu-demo" mode="horizontal" :ellipsis="false">
       <el-menu-item index="0">
         <h1 class="text-xl">LET'S BLOG</h1>
       </el-menu-item>
       <div class="flex-1" />
 
-      <el-menu-item index="1">
+      <el-menu-item index="signup">
         <router-link to="/signup">Signup</router-link>
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item index="signin">
         <router-link to="/signin">Signin</router-link>
       </el-menu-item>
-      <el-menu-item index="3">
+      <el-menu-item index="blogs">
         <router-link to="/">Blogs</router-link>
       </el-menu-item>
-      <el-menu-item index="4" v-if="authStore.isAuthenticated">
+      <el-menu-item index="profile-page" v-if="authStore.isAuthenticated">
         <router-link :to="{ name: 'profile-page', params: { bloggerId: authStore.user._id } }"
           >Profile</router-link
         >
@@ -33,13 +33,13 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useAuthStore } from '../stores/auth'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const authStore = useAuthStore()
 const router = useRouter()
-const activeIndex = ref('1')
+const route = useRoute()
 
 watch(
   () => authStore.isAuthenticated,
