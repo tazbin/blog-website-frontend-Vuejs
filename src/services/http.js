@@ -5,7 +5,7 @@ const baseURL = import.meta.env.VITE_APP_API_BASE_URL
 export const axiosInstance = (() => {
   const axiosClient = axios.create({
     baseURL,
-    timeout: 1000,
+    timeout: 30000,
     headers: {
       Accept: 'application/json'
     }
@@ -35,7 +35,7 @@ export const axiosInstance = (() => {
 
       if (error.response && error.response.status == 401 && refreshToken) {
         try {
-          const response = await axiosInstance.post('http://localhost:3000/user/me/refresToken', {
+          const response = await axiosInstance.post(`${baseURL}/user/me/refresToken`, {
             refreshToken
           })
 

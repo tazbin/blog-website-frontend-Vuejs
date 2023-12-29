@@ -14,30 +14,28 @@ export const useBlogStore = defineStore('blog', () => {
     getBlogsSuccess.value = false
     isGetBlogsLoading.value = true
 
-    setTimeout(() => {
-      let url = 'blog/all'
-      if (blogCriterions.categoryId) {
-        url += `/${blogCriterions.categoryId}`
-      }
+    let url = 'blog/all'
+    if (blogCriterions.categoryId) {
+      url += `/${blogCriterions.categoryId}`
+    }
 
-      makeApiRequest({
-        url,
-        params: {
-          page: blogCriterions.page ?? 1
-        },
-        method: 'get'
+    makeApiRequest({
+      url,
+      params: {
+        page: blogCriterions.page ?? 1
+      },
+      method: 'get'
+    })
+      .then((res) => {
+        blogsWithPagination.value = res.data
+        getBlogsSuccess.value = true
+        isGetBlogsLoading.value = false
       })
-        .then((res) => {
-          blogsWithPagination.value = res.data
-          getBlogsSuccess.value = true
-          isGetBlogsLoading.value = false
-        })
-        .catch((err) => {
-          getBlogsSuccess.value = false
-          getBlogsError.value = err.response.data.error
-          isGetBlogsLoading.value = false
-        })
-    }, 4000)
+      .catch((err) => {
+        getBlogsSuccess.value = false
+        getBlogsError.value = err.response.data.error
+        isGetBlogsLoading.value = false
+      })
   }
 
   const getBloggerBlogs = (blogCriterions) => {
@@ -46,27 +44,25 @@ export const useBlogStore = defineStore('blog', () => {
     getBlogsSuccess.value = false
     isGetBlogsLoading.value = true
 
-    setTimeout(() => {
-      let url = `blog/${blogCriterions.bloggerId}/${blogCriterions.categoryId}`
+    let url = `blog/${blogCriterions.bloggerId}/${blogCriterions.categoryId}`
 
-      makeApiRequest({
-        url,
-        params: {
-          page: blogCriterions.page ?? 1
-        },
-        method: 'get'
+    makeApiRequest({
+      url,
+      params: {
+        page: blogCriterions.page ?? 1
+      },
+      method: 'get'
+    })
+      .then((res) => {
+        blogsWithPagination.value = res.data
+        getBlogsSuccess.value = true
+        isGetBlogsLoading.value = false
       })
-        .then((res) => {
-          blogsWithPagination.value = res.data
-          getBlogsSuccess.value = true
-          isGetBlogsLoading.value = false
-        })
-        .catch((err) => {
-          getBlogsSuccess.value = false
-          getBlogsError.value = err.response.data.error
-          isGetBlogsLoading.value = false
-        })
-    }, 4000)
+      .catch((err) => {
+        getBlogsSuccess.value = false
+        getBlogsError.value = err.response.data.error
+        isGetBlogsLoading.value = false
+      })
   }
 
   const blogDetails = ref({})
@@ -80,22 +76,20 @@ export const useBlogStore = defineStore('blog', () => {
     blogDetailsError.value = {}
     isBlogDetailsLoading.value = false
 
-    setTimeout(() => {
-      makeApiRequest({
-        url: 'blog/details/' + blogId,
-        method: 'get'
+    makeApiRequest({
+      url: 'blog/details/' + blogId,
+      method: 'get'
+    })
+      .then((res) => {
+        blogDetails.value = res.data
+        blogDetailsSuccess.value = true
+        isBlogDetailsLoading.value = false
       })
-        .then((res) => {
-          blogDetails.value = res.data
-          blogDetailsSuccess.value = true
-          isBlogDetailsLoading.value = false
-        })
-        .catch((err) => {
-          blogDetailsSuccess.value = false
-          blogDetailsError.value = err.response.data.error
-          isGetBlogsLoading.value = false
-        })
-    }, 4000)
+      .catch((err) => {
+        blogDetailsSuccess.value = false
+        blogDetailsError.value = err.response.data.error
+        isGetBlogsLoading.value = false
+      })
   }
 
   const postCommentSuccess = ref(false)
@@ -138,22 +132,20 @@ export const useBlogStore = defineStore('blog', () => {
     getCategoriesError.value = {}
     isGetCategoriesLoading.value = false
 
-    setTimeout(() => {
-      makeApiRequest({
-        url: 'category/categorizedBlogs/all',
-        method: 'get'
+    makeApiRequest({
+      url: 'category/categorizedBlogs/all',
+      method: 'get'
+    })
+      .then((res) => {
+        categories.value = res.data
+        getCategoriesSuccess.value = true
+        isGetCategoriesLoading.value = false
       })
-        .then((res) => {
-          categories.value = res.data
-          getCategoriesSuccess.value = true
-          isGetCategoriesLoading.value = false
-        })
-        .catch((err) => {
-          postCommentSuccess.value = false
-          postCommentError.value = err.response.data.error
-          isPostCommentLoading.value = false
-        })
-    }, 4000)
+      .catch((err) => {
+        postCommentSuccess.value = false
+        postCommentError.value = err.response.data.error
+        isPostCommentLoading.value = false
+      })
   }
 
   const getBloggerBlogCategories = (bloggerId) => {
@@ -162,22 +154,20 @@ export const useBlogStore = defineStore('blog', () => {
     getCategoriesError.value = {}
     isGetCategoriesLoading.value = false
 
-    setTimeout(() => {
-      makeApiRequest({
-        url: 'category/categorizedBlogs/' + bloggerId,
-        method: 'get'
+    makeApiRequest({
+      url: 'category/categorizedBlogs/' + bloggerId,
+      method: 'get'
+    })
+      .then((res) => {
+        categories.value = res.data
+        getCategoriesSuccess.value = true
+        isGetCategoriesLoading.value = false
       })
-        .then((res) => {
-          categories.value = res.data
-          getCategoriesSuccess.value = true
-          isGetCategoriesLoading.value = false
-        })
-        .catch((err) => {
-          postCommentSuccess.value = false
-          postCommentError.value = err.response.data.error
-          isPostCommentLoading.value = false
-        })
-    }, 4000)
+      .catch((err) => {
+        postCommentSuccess.value = false
+        postCommentError.value = err.response.data.error
+        isPostCommentLoading.value = false
+      })
   }
 
   return {

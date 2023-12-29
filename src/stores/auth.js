@@ -40,7 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
     loginLoading.value = true
 
     return makeApiRequest({
-      url: 'http://localhost:3000/user/login',
+      url: 'user/login',
       method: 'post',
       payload: {
         email: loginData.email,
@@ -76,22 +76,20 @@ export const useAuthStore = defineStore('auth', () => {
       loggedInUserFetchError.value = {}
       loggedInUserFetchSuccess.value = false
 
-      setTimeout(() => {
-        makeApiRequest({
-          url: 'http://localhost:3000/user/me',
-          method: 'get'
+      makeApiRequest({
+        url: 'user/me',
+        method: 'get'
+      })
+        .then((res) => {
+          loggedInUserFetchSuccess.value = true
+          user.value = res.data
+          isAuthenticated.value = true
         })
-          .then((res) => {
-            loggedInUserFetchSuccess.value = true
-            user.value = res.data
-            isAuthenticated.value = true
-          })
-          .catch((err) => {
-            loggedInUserFetchError.value = err.response.data.error
-            clearLocalStorage()
-            resetLoginState()
-          })
-      }, 4000)
+        .catch((err) => {
+          loggedInUserFetchError.value = err.response.data.error
+          clearLocalStorage()
+          resetLoginState()
+        })
     }
   }
 
@@ -106,21 +104,19 @@ export const useAuthStore = defineStore('auth', () => {
     bloggerProfileSuccess.value = false
     isBloggerProfileLoading.value = true
 
-    setTimeout(() => {
-      makeApiRequest({
-        url: 'http://localhost:3000/user/bloggerProfile/' + bloggerId,
-        method: 'get'
+    makeApiRequest({
+      url: 'user/bloggerProfile/' + bloggerId,
+      method: 'get'
+    })
+      .then((res) => {
+        bloggerProfileSuccess.value = true
+        bloggerProfile.value = res.data
+        isBloggerProfileLoading.value = false
       })
-        .then((res) => {
-          bloggerProfileSuccess.value = true
-          bloggerProfile.value = res.data
-          isBloggerProfileLoading.value = false
-        })
-        .catch((err) => {
-          bloggerProfileError.value = err.response.data.error
-          isBloggerProfileLoading.value = false
-        })
-    }, 4000)
+      .catch((err) => {
+        bloggerProfileError.value = err.response.data.error
+        isBloggerProfileLoading.value = false
+      })
   }
 
   const registerLoading = ref(false)
@@ -133,7 +129,7 @@ export const useAuthStore = defineStore('auth', () => {
     registerLoading.value = true
 
     makeApiRequest({
-      url: 'http://localhost:3000/user/register',
+      url: 'user/register',
       method: 'post',
       payload: {
         email: registerData.email,
