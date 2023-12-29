@@ -15,7 +15,7 @@ export const useBlogStore = defineStore('blog', () => {
     isGetBlogsLoading.value = true
 
     setTimeout(() => {
-      let url = 'http://localhost:3000/blog/all'
+      let url = 'blog/all'
       if (blogCriterions.categoryId) {
         url += `/${blogCriterions.categoryId}`
       }
@@ -47,7 +47,7 @@ export const useBlogStore = defineStore('blog', () => {
     isGetBlogsLoading.value = true
 
     setTimeout(() => {
-      let url = `http://localhost:3000/blog/${blogCriterions.bloggerId}/${blogCriterions.categoryId}`
+      let url = `blog/${blogCriterions.bloggerId}/${blogCriterions.categoryId}`
 
       makeApiRequest({
         url,
@@ -82,7 +82,7 @@ export const useBlogStore = defineStore('blog', () => {
 
     setTimeout(() => {
       makeApiRequest({
-        url: 'http://localhost:3000/blog/details/' + blogId,
+        url: 'blog/details/' + blogId,
         method: 'get'
       })
         .then((res) => {
@@ -108,7 +108,7 @@ export const useBlogStore = defineStore('blog', () => {
     isPostCommentLoading.value = false
 
     makeApiRequest({
-      url: 'http://localhost:3000/blog/comment',
+      url: 'blog/comment',
       method: 'post',
       payload: {
         blogId: commentData.blogId,
@@ -140,7 +140,7 @@ export const useBlogStore = defineStore('blog', () => {
 
     setTimeout(() => {
       makeApiRequest({
-        url: 'http://localhost:3000/category/categorizedBlogs/all',
+        url: 'category/categorizedBlogs/all',
         method: 'get'
       })
         .then((res) => {
@@ -164,7 +164,7 @@ export const useBlogStore = defineStore('blog', () => {
 
     setTimeout(() => {
       makeApiRequest({
-        url: 'http://localhost:3000/category/categorizedBlogs/' + bloggerId,
+        url: 'category/categorizedBlogs/' + bloggerId,
         method: 'get'
       })
         .then((res) => {
