@@ -26,6 +26,7 @@
 
     <div class="col-span-4">
       <el-pagination
+        v-show="blogStore.getBlogsSuccess"
         :current-page="blogStore.blogsWithPagination.currentPage"
         :page-size="6"
         :small="small"
@@ -39,7 +40,7 @@
       <blog-card :blogs="blogStore.blogsWithPagination.result" class="col-span-1" />
     </div>
     <div class="col-span-1">
-      <BlogCategories />
+      <BlogCategories v-show="blogStore.getBlogsSuccess" />
     </div>
   </div>
 </template>
