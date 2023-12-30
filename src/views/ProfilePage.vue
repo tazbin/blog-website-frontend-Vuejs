@@ -57,15 +57,16 @@
       </div>
 
       <el-pagination
-        v-show="blogStore.getBlogsSuccess"
-        small
-        background
-        layout="prev, pager, next"
-        :current-page="currentPage"
-        :total="blogStore.blogsWithPagination.totalBlogs"
-        class="mt-4 col-span-4"
-        @current-change="(pageNumber) => paginate(pageNumber)"
-      />
+      class="col-span-4 mt-4"
+      v-show="blogStore.getBlogsSuccess"
+      :current-page="blogStore.blogsWithPagination.currentPage"
+      :page-size=6
+      :small="small"
+      :background="false"
+      layout="total, prev, pager, next"
+      :total="totalPage"
+      @current-change="handleCurrentChange"
+    />
       <div v-if="blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
         <blog-card :blogs="blogStore.blogsWithPagination.result" class="col-span-1" />
       </div>
@@ -95,15 +96,16 @@ const props = defineProps({
 const authStore = useAuthStore()
 const blogStore = useBlogStore()
 
-const currentPage = ref(1)
+const totalPage = ref(0)
 
-const paginate = (pageNumber) => {
-  currentPage.value = pageNumber
-  blogStore.getBloggerBlogs({
-    bloggerId: props.bloggerId,
-    categoryId: props.categoryId || 'all',
-    page: pageNumber
-  })
+watch(() => blogStore.blogsWithPagination, () => {
+  if( blogStore.blogsWithPagination?.totalBlogs && blogStore.blogsWithPagination.totalBlogs != totalPage.value ) {
+    totalPage.value = blogStore.blogsWithPagination.totalBlogs
+  }
+})
+
+const handleCurrentChange = (val) => {
+  blogStore.getBlogs({ categoryId: props.categoryId, page: val })
 }
 
 watch(

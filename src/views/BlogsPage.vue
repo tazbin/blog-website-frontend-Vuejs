@@ -24,16 +24,17 @@
       </el-skeleton>
     </div>
 
-    <el-pagination
-      v-show="blogStore.getBlogsSuccess"
-      small
-      background
-      layout="prev, pager, next"
-      :current-page="currentPage"
-      :total="blogStore.blogsWithPagination.totalBlogs"
-      class="mt-4 col-span-4"
-      @current-change="(pageNumber) => paginate(pageNumber)"
+<div class="col-span-4">
+<el-pagination
+      :current-page="blogStore.blogsWithPagination.currentPage"
+      :page-size=6
+      :small="small"
+      :background="false"
+      layout="total, prev, pager, next"
+      :total="totalPage"
+      @current-change="handleCurrentChange"
     />
+</div>
     <div v-show="blogStore.getBlogsSuccess" class="col-span-3 grid grid-cols-3 gap-4">
       <blog-card :blogs="blogStore.blogsWithPagination.result" class="col-span-1" />
     </div>
@@ -58,9 +59,19 @@ const props = defineProps({
   }
 })
 
-const currentPage = ref(1)
-
 const blogStore = useBlogStore()
+const totalPage = ref(0)
+
+watch(() => blogStore.blogsWithPagination, () => {
+  if( blogStore.blogsWithPagination?.totalBlogs && blogStore.blogsWithPagination.totalBlogs != totalPage.value ) {
+    totalPage.value = blogStore.blogsWithPagination.totalBlogs
+  }
+})
+
+const handleCurrentChange = (val) => {
+  blogStore.getBlogs({ categoryId: props.categoryId, page: val })
+}
+
 
 onBeforeMount(() => {
   blogStore.getBlogs({
@@ -68,15 +79,9 @@ onBeforeMount(() => {
   })
 })
 
-const paginate = (pageNumber) => {
-  currentPage.value = pageNumber
-  blogStore.getBlogs({ categoryId: props.categoryId, page: pageNumber })
-}
-
 watch(
   () => props.categoryId,
   () => {
-    currentPage.value = 1
     blogStore.getBlogs({
       categoryId: props.categoryId
     })
